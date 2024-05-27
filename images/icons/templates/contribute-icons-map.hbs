@@ -1,0 +1,17 @@
+{
+	"icons": {
+		{{#each codepoints}}
+		"publicdev-{{@key}}": {
+			"description": "{{@key}} icon",
+			"default": {
+				"fontPath": "dist/pdicons.woff2",
+				"fontCharacter": "\\\{{codepoint this}}"
+			}
+		{{#if @last}}
+		}
+		{{else}}
+		},
+		{{/if}}
+		{{/each}}
+	}
+}
