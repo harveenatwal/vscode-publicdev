@@ -4,9 +4,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "tooltip-border": 'var(--tooltip-border)',
+        editor: {
+          DEFAULT: 'var(--editor)',
+          foreground: 'var(--editor-foreground)'
+        },
         muted: {
           DEFAULT: 'var(--muted)',
           foreground: 'var(--muted-foreground)'
+        },
+        tooltip: {
+          DEFAULT: 'var(--tooltip)',
+          foreground: 'var(--tooltip-foreground)'
         },
       },
     },
