@@ -48,6 +48,13 @@
           "fontPath": "dist/pdicons.woff2",
           "fontCharacter": "\\f101"
         }
+      },
+      "publicdev-twitter-x": {
+        "description": "twitter-x icon",
+        "default": {
+          "fontPath": "dist/pdicons.woff2",
+          "fontCharacter": "\\f102"
+        }
       }
     }
   },
@@ -88,5 +95,8 @@
     "svgo": "^3.3.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@vscode/codicons": "^0.0.36"
   }
 }

@@ -38,14 +38,31 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     return this.extensionUri;
   }
 
-  private async getHtmlForWebview(webview: vscode.Webview) {
-    const htmlUri = vscode.Uri.joinPath(
-      this.getRootUri(),
-      "dist/webviews/home.html"
-    );
+  private getDistUri() {
+    return vscode.Uri.joinPath(this.getRootUri(), "dist");
+  }
 
+  private getWebviewsUri() {
+    return vscode.Uri.joinPath(this.getDistUri(), "webviews");
+  }
+
+  private getNodeModulesUri() {
+    return vscode.Uri.joinPath(this.getRootUri(), "node_modules");
+  }
+
+  private async getHtmlForWebview(webview: vscode.Webview) {
+    const htmlUri = vscode.Uri.joinPath(this.getWebviewsUri(), "home.html");
     const cssUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.getRootUri(), "dist/main.css")
+      vscode.Uri.joinPath(this.getDistUri(), "main.css")
+    );
+    const codiconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.getNodeModulesUri(),
+        "@vscode/codicons/dist/codicon.css"
+      )
+    );
+    const pdiconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.getDistUri(), "pdicons.css")
     );
 
     const [bytes] = await Promise.all([vscode.workspace.fs.readFile(htmlUri)]);
@@ -53,6 +70,9 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
       cspSource: webview.cspSource,
       cspNonce: getNonce(),
       cssUri: cssUri.toString(),
+      rootUri: this.getRootUri().toString(),
+      codiconsUri: codiconsUri.toString(),
+      pdiconsUri: pdiconsUri.toString(),
     });
 
     return html;

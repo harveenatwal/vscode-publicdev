@@ -7,12 +7,11 @@ const config = {
 	codepoints: require('./images/icons/templates/mapping.json'),
 	inputDir: './images/icons',
 	outputDir: './dist',
-	fontsUrl: '#{root}/dist',
 	// @ts-ignore
 	fontTypes: ['woff2'],
 	normalize: true,
 	// @ts-ignore
-	assetTypes: ['html', 'scss', 'json'],
+	assetTypes: ['html', 'css', 'json'],
 	templates: {
 		html: './images/icons/templates/contribute-icons-map.hbs',
 	},

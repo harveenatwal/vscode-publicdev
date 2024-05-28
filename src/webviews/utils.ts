@@ -12,16 +12,20 @@ interface ReplaceWebviewHtmlTokensOptions {
   cspSource: string;
   cspNonce: string;
   cssUri: string;
+  codiconsUri: string;
+  pdiconsUri: string;
+  rootUri: string;
 }
 
 export function replaceWebviewHtmlTokens(
   html: string,
   options: ReplaceWebviewHtmlTokensOptions
 ) {
-  const { cspNonce, cspSource, cssUri } = options;
+  const { cspNonce, cspSource, cssUri, codiconsUri, pdiconsUri, rootUri } =
+    options;
 
   return html.replace(
-    /#{(cssUri|cspSource|cspNonce|)}/g,
+    /#{(cssUri|cspSource|cspNonce|codiconsUri|pdiconsUri|rootUri)}/g,
     (_substring: string, token: string) => {
       switch (token) {
         case "cspSource":
@@ -30,6 +34,12 @@ export function replaceWebviewHtmlTokens(
           return cspNonce;
         case "cssUri":
           return cssUri;
+        case "codiconsUri":
+          return codiconsUri;
+        case "pdiconsUri":
+          return pdiconsUri;
+        case "rootUri":
+          return rootUri;
         default:
           return "";
       }

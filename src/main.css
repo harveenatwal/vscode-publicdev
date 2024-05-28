@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+      --muted: var(--vscode-foreground);
+      --muted-foreground: var(--vscode-descriptionForeground);
+    }
+
+    html {
+        font-size: var(--vscode-font-size);
+    }
+}
