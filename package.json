@@ -54,9 +54,12 @@
   "scripts": {
     "vscode:prepublish": "pnpm run package",
     "compile": "pnpm run check-types && pnpm run lint && node esbuild.mjs",
+    "pre-watch": "pnpm build:icons",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.mjs --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "watch:html": "copy-and-watch --watch src/webviews/**/*.html ./dist/webviews",
+    "watch:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css --watch",
     "package": "pnpm run check-types && pnpm run lint && node esbuild.mjs --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
@@ -68,6 +71,7 @@
     "icons:svgo": "svgo -q -f ./images/icons/ --config svgo.config.js"
   },
   "devDependencies": {
+    "@twbs/fantasticon": "^3.0.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.89.0",
@@ -75,14 +79,14 @@
     "@typescript-eslint/parser": "^7.7.1",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.3.9",
+    "autoprefixer": "^10.4.19",
+    "copy-and-watch": "^0.1.8",
     "esbuild": "^0.20.2",
-    "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.57.0",
     "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.38",
+    "svgo": "^3.3.2",
+    "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@twbs/fantasticon": "^3.0.0",
-    "svgo": "^3.3.2"
   }
 }

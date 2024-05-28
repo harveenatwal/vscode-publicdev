@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { getNonce, replaceWebviewHtmlTokens } from "../utils";
 
 const utf8TextDecoder = new TextDecoder("utf8");
-const utf8TextEncoder = new TextEncoder();
 
 export class HomeViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "publicdev.homeView";
@@ -40,16 +39,20 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   }
 
   private async getHtmlForWebview(webview: vscode.Webview) {
-    console.log(this.getRootUri());
-    const uri = vscode.Uri.joinPath(
+    const htmlUri = vscode.Uri.joinPath(
       this.getRootUri(),
-      "dist/webviews/home/home.html"
+      "dist/webviews/home.html"
     );
 
-    const [bytes] = await Promise.all([vscode.workspace.fs.readFile(uri)]);
+    const cssUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.getRootUri(), "dist/main.css")
+    );
+
+    const [bytes] = await Promise.all([vscode.workspace.fs.readFile(htmlUri)]);
     const html = replaceWebviewHtmlTokens(utf8TextDecoder.decode(bytes), {
       cspSource: webview.cspSource,
       cspNonce: getNonce(),
+      cssUri: cssUri.toString(),
     });
 
     return html;
