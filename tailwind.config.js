@@ -7,7 +7,12 @@ module.exports = {
         "tooltip-border": 'var(--tooltip-border)',
         editor: {
           DEFAULT: 'var(--editor)',
-          foreground: 'var(--editor-foreground)'
+          foreground: 'var(--editor-foreground)',
+          border: 'var(--editor-border)'
+        },
+        button: {
+          DEFAULT: 'var(--button)',
+          foreground: 'var(--button-foreground)'
         },
         muted: {
           DEFAULT: 'var(--muted)',

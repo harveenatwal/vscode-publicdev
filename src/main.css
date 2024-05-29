@@ -4,15 +4,20 @@
 
 @layer base {
     :root {
+      
       --tooltip: var(--vscode-editorHoverWidget-background);
       --tooltip-foreground: var(--vscode-editorHoverWidget-foreground);
       --tooltip-border: var(--vscode-editorHoverWidget-border);
-
+      
       --editor: var(--vscode-editor-background);
       --editor-foreground: var(--vscode-editor-foreground);
+      --editor-border: var(--vscode-editorWidget-border)
 
       --muted: var(--vscode-foreground);
       --muted-foreground: var(--vscode-descriptionForeground);
+
+      --button: var(--vscode-button-background);
+      --button-foreground: var(--vscode-button-foreground);
     }
 
     html {
