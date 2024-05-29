@@ -21,10 +21,10 @@
   </head>
   <body>
     <header>
-      <nav class="flex justify-between mb-2">
+      <nav class="flex justify-between mb-4">
         <div class="flex gap-1 items-center -ml-2">
           <div class="group relative">
-            <a href="https://x.com/@publicdev"
+            <a href="https://x.com/PublicDevTeam"
               ><i
                 class="hover:bg-editor p-2 rounded inline-flex codicon codicon-twitter text-sm"
               ></i
@@ -32,11 +32,12 @@
             <span
               class="group-hover:opacity-100 pointer-events-none absolute top-10 -left-1 w-max opacity-0 transition-opacity border shadow p-1 bg-tooltip text-tooltip-foreground rounded border-tooltip-border"
             >
-              @publicdev
+              @PublicDevTeam
             </span>
           </div>
           <div class="group relative">
-            <a href="https://github.com/harveenatwal/vscode-publicdev/issues"
+            <a
+              href="https://github.com/harveymoonlights/vscode-publicdev/issues"
               ><i
                 class="hover:bg-editor p-2 rounded inline-flex codicon codicon-feedback text-sm"
               ></i
@@ -50,7 +51,7 @@
         </div>
         <div class="flex gap-1 items-center -mr-2">
           <div class="group relative">
-            <a href="https://github.com/harveenatwal/vscode-publicdev/"
+            <a href="https://github.com/harveymoonlights/vscode-publicdev/"
               ><i
                 class="hover:bg-editor p-2 rounded inline-flex codicon codicon-github text-sm"
               ></i
@@ -70,23 +71,15 @@
           <h2
             class="mb-2 tracking-widest uppercase text-xs text-muted-foreground"
           >
-            Configuration
+            Configure API Keys
           </h2>
-          <div class="flex gap-2 items-center">
-            <i class="inline-flex codicon codicon-gear text-sm"></i>
-            <div>PublicDev Settings</div>
-          </div>
-        </div>
-        <div>
-          <h2
-            class="mb-2 tracking-widest uppercase text-xs text-muted-foreground"
+          <a
+            href="command:publicdev.setOpenAIApiKey"
+            class="flex gap-2 items-center"
           >
-            Integrations
-          </h2>
-          <div class="flex gap-2 items-center">
-            <i class="pdicon pdicon-twitter-x text-sm inline-flex"></i>
-            <div>X (Twitter)</div>
-          </div>
+            <i class="pdicon pdicon-openai text-sm inline-flex"></i>
+            <div>OpenAI</div>
+          </a>
         </div>
       </nav>
     </main>

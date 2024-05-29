@@ -36,8 +36,8 @@
     },
     "commands": [
       {
-        "command": "publicdev.start",
-        "title": "Start session",
+        "command": "publicdev.setOpenAIApiKey",
+        "title": "Set OpenAI API Key",
         "category": "PublicDev"
       }
     ],
