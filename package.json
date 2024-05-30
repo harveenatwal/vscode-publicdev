@@ -58,13 +58,16 @@
       }
     }
   },
+  "extensionDependencies": [
+    "vscode.git"
+  ],
   "scripts": {
     "vscode:prepublish": "pnpm run package",
     "compile": "pnpm run check-types && pnpm run lint && node esbuild.mjs",
     "pre-watch": "pnpm build:icons",
-    "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.mjs --watch",
-    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "watch": "concurrently npm:watch:*",
+    "watch:esbuild": "concurrently -p none \"node esbuild.mjs --watch\" \"node esbuild.webviews.mjs --watch\"",
+    "watch:tsc": "concurrently -p none \"tsc --noEmit --watch --project tsconfig.json\" \"tsc --noEmit --watch --project tsconfig.webviews.json\"",
     "watch:html": "copy-and-watch --watch src/webviews/**/*.html ./dist/webviews",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css --watch",
     "package": "pnpm run check-types && pnpm run lint && node esbuild.mjs --production",
@@ -90,13 +93,17 @@
     "copy-and-watch": "^0.1.8",
     "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
-    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.38",
     "svgo": "^3.3.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@vscode/codicons": "^0.0.36"
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vscode/codicons": "^0.0.36",
+    "concurrently": "^8.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

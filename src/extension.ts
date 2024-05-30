@@ -1,38 +1,40 @@
-import * as vscode from "vscode";
+import { window, ExtensionContext, Disposable, commands } from "vscode";
 import { HomeViewProvider } from "./webviews/home/home-view-provider";
 import { SET_OPEN_AI_API_KEY_COMMAND } from "./constants/commands";
 import { OPENAI_API_KEY_SECRET_KEY } from "./constants/secrets";
 
-export function activate(context: vscode.ExtensionContext) {
-  const homeViewProvider = new HomeViewProvider(context.extensionUri);
-
+export function activate(context: ExtensionContext) {
+  // Ensure all disposables are properly subscribed and disposed of
+  // when the extension unloads.
+  const disposables: Disposable[] = [];
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      HomeViewProvider.viewType,
-      homeViewProvider
-    )
+    new Disposable(() => Disposable.from(...disposables).dispose())
   );
 
+  const homeViewProvider = window.registerWebviewViewProvider(
+    HomeViewProvider.viewType,
+    new HomeViewProvider(context)
+  );
+  disposables.push(homeViewProvider);
+
   const setOpenAiApiKeyCommandHandler = async (name: string = "world") => {
-    const apiKey = await vscode.window.showInputBox({
+    const apiKey = await window.showInputBox({
       prompt: "Enter your OpenAI API key",
       placeHolder: "sk-...",
     });
 
     if (apiKey) {
       await context.secrets.store(OPENAI_API_KEY_SECRET_KEY, apiKey);
-      vscode.window.showInformationMessage(
+      window.showInformationMessage(
         "Your OpenAI API key has been securely encrypted and stored."
       );
     }
   };
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      SET_OPEN_AI_API_KEY_COMMAND,
-      setOpenAiApiKeyCommandHandler
-    )
+  const setOpenAIApiKeyCommand = commands.registerCommand(
+    SET_OPEN_AI_API_KEY_COMMAND,
+    setOpenAiApiKeyCommandHandler
   );
+  disposables.push(setOpenAIApiKeyCommand);
 }
 
 export function deactivate() {}
