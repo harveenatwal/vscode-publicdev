@@ -1,49 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 
+import {
+  HomeState,
+  APP_READY_MESSAGE,
+  INIT_MESSAGE,
+  UPDATE_MESSAGE,
+} from "./shared";
+
+// Get a reference to the VS Code webview api.
+// We use this API to post messages back to our extension.
+const vscode = acquireVsCodeApi();
+
 function App() {
+  const [state, setState] = useState<HomeState>();
+
+  useEffect(() => {
+    // Handle messages sent from the extension to the webview
+    const listener = (event: MessageEvent<any>) => {
+      const { type, data } = event.data;
+
+      switch (type) {
+        case INIT_MESSAGE:
+        case UPDATE_MESSAGE:
+          setState(data);
+          break;
+      }
+    };
+    window.addEventListener("message", listener);
+    // App is ready. Let Webview know.
+    vscode.postMessage({ type: APP_READY_MESSAGE });
+    return () => {
+      window.removeEventListener("message", listener);
+    };
+  }, []);
+
+  if (!state) {
+    return null;
+  }
+
+  const { repositoryCount } = state;
+
   return (
     <>
       <header>
         <div>
-          <div className="mb-4 border-editor-border border-l-4 border-0 bg-editor rounded-lg p-3 pl-4">
-            <h1 className="font-medium mb-1">No repository detected</h1>
-            <div className="flex flex-col gap-4">
-              <p className="text-sm text-muted-foreground">
-                Start using PublicDev by opening an existing git repository
-                folder or cloning a repository from a URL in the Explorer.
-              </p>
-              <a
-                className="block text-center bg-button text-button-foreground py-1 px-4 rounded"
-                href="command:workbench.view.explorer"
-              >
-                Open a Folder or Repository
-              </a>
+          {repositoryCount === 0 && (
+            <div className="mb-4 border-editor-border border-l-4 border-0 bg-editor rounded-lg p-3 pl-4">
+              <h1 className="font-medium mb-1">No repository detected</h1>
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-muted-foreground">
+                  Start using PublicDev by opening an existing git repository
+                  folder or cloning a repository from a URL in the Explorer.
+                </p>
+                <a
+                  className="block text-center bg-button text-button-foreground py-1 px-4 rounded"
+                  href="command:workbench.view.explorer"
+                >
+                  Open a Folder or Repository
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="mb-4 border-editor-border border-l-4 border-0 bg-editor rounded-lg p-3 pl-4">
-            <h1 className="font-medium mb-2">Get started with PublicDev</h1>
-            <div className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">
-                Ready to build in public? It's this easy:
-              </p>
-              <ol className="text-sm text-muted-foreground list-decimal pl-4 space-y-1">
-                <li>
-                  <a
-                    href="command:publicdev.setOpenAIApiKey"
-                    className="underline"
-                  >
-                    Configure your OpenAI API key
-                  </a>
-                </li>
-                <li>Find the commit you want to share.</li>
-                <li>
-                  Right-click the commit and select <br />
-                  PublicDev -{">"} Share on X (Twitter).
-                </li>
-              </ol>
+          )}
+          {repositoryCount > 0 && (
+            <div className="mb-4 border-editor-border border-l-4 border-0 bg-editor rounded-lg p-3 pl-4">
+              <h1 className="font-medium mb-2">Get started with PublicDev</h1>
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-muted-foreground">
+                  Ready to build in public? It's this easy:
+                </p>
+                <ol className="text-sm text-muted-foreground list-decimal pl-4 space-y-1">
+                  <li>
+                    <a
+                      href="command:publicdev.setOpenAIApiKey"
+                      className="underline"
+                    >
+                      Configure your OpenAI API key
+                    </a>
+                  </li>
+                  <li>Find the commit you want to share.</li>
+                  <li>
+                    Right-click the commit and select <br />
+                    PublicDev -{">"} Share on X (Twitter).
+                  </li>
+                </ol>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <nav className="flex justify-between mb-4">
           <div className="flex gap-1 items-center -ml-2">
@@ -99,21 +142,4 @@ function App() {
 (function () {
   const root = ReactDOM.createRoot(document.getElementById("root")!);
   root.render(<App />);
-
-  // Get a reference to the VS Code webview api.
-  // We use this API to post messages back to our extension.
-  // @ts-ignore
-  const vscode = acquireVsCodeApi();
-
-  function initialize() {}
-
-  // Handle messages sent from the extension to the webview
-  window.addEventListener("message", (event) => {
-    const message = event.data;
-    switch (message.type) {
-      case "initialize":
-        initialize();
-        return;
-    }
-  });
 })();
