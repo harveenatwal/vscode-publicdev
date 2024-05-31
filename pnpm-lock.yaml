@@ -20,6 +20,9 @@ dependencies:
   concurrently:
     specifier: ^8.2.2
     version: 8.2.2
+  date-fns:
+    specifier: ^3.6.0
+    version: 3.6.0
   react:
     specifier: ^18.3.1
     version: 18.3.1
@@ -1169,6 +1172,10 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.24.6
+    dev: false
+
+  /date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
     dev: false
 
   /debug@4.3.4(supports-color@8.1.1):

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { formatDistanceToNowStrict } from "date-fns";
 
 import {
   HomeState,
@@ -39,7 +40,7 @@ function App() {
     return null;
   }
 
-  const { repositoryCount } = state;
+  const { repositoryCount, commitHistory } = state;
 
   return (
     <>
@@ -78,11 +79,7 @@ function App() {
                       Configure your OpenAI API key
                     </a>
                   </li>
-                  <li>Find the commit you want to share.</li>
-                  <li>
-                    Right-click the commit and select <br />
-                    PublicDev -{">"} Share on X (Twitter).
-                  </li>
+                  <li>Start drafting a tweet by clicking a commit below.</li>
                 </ol>
               </div>
             </div>
@@ -123,7 +120,7 @@ function App() {
         <nav className="space-y-8">
           <div>
             <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
-              Configure API Keys
+              Configure API Key
             </h2>
             <a
               href="command:publicdev.setOpenAIApiKey"
@@ -133,6 +130,28 @@ function App() {
               <div>OpenAI </div>
             </a>
           </div>
+          {commitHistory.length > 0 && (
+            <div>
+              <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
+                Timeline
+              </h2>
+              <div className="space-y-1.5">
+                {commitHistory.map((commit) => (
+                  <div className="flex gap-2 items-center justify-between text-sm flex-0">
+                    <i className="inline-flex codicon codicon-git-commit"></i>
+                    <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+                      {commit.message}
+                    </div>
+                    {commit.authorDate && (
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-0 text-muted-foreground flex-0 text-right">
+                        {formatDistanceToNowStrict(commit.authorDate)}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </nav>
       </main>
     </>

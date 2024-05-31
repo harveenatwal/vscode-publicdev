@@ -104,6 +104,7 @@
     "@types/vscode-webview": "^1.57.5",
     "@vscode/codicons": "^0.0.36",
     "concurrently": "^8.2.2",
+    "date-fns": "^3.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }

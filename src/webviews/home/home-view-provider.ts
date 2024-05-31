@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce, replaceWebviewHtmlTokens } from "../utils";
-import { API as GitAPI, GitExtension } from "../../git";
+import { API as GitAPI, GitExtension, Repository } from "../../git";
 import {
   HomeState,
   APP_READY_MESSAGE,
@@ -8,19 +8,27 @@ import {
   UPDATE_MESSAGE,
 } from "./shared";
 
-const utf8TextDecoder = new TextDecoder("utf8");
+const UTF8_TEXT_DECODER = new TextDecoder("utf8");
+const MAX_COMMITS_IN_TIMELINE = 15;
 
 export class HomeViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "publicdev.homeView";
 
-  private _view?: vscode.WebviewView;
-  private _git?: GitAPI;
-  private _homeState?: HomeState;
-  private _disposables: vscode.Disposable[] = [];
+  private disposables: vscode.Disposable[] = [];
+  private selectedRepository: Repository | null = null;
+
+  private view?: vscode.WebviewView;
+  private homeState?: HomeState;
+  private git?: GitAPI;
 
   constructor(private readonly extensionContext: vscode.ExtensionContext) {
-    console.log("constructor");
-    this._homeState = this.initializeHomeState();
+    const gitExtension =
+      vscode.extensions.getExtension<GitExtension>("vscode.git")!.exports;
+    if (gitExtension.enabled) {
+      this.git = gitExtension.getAPI(1);
+    }
+
+    this.initializeHomeState();
     this.bindEvents();
   }
 
@@ -29,70 +37,72 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ) {
-    this._view = webviewView;
+    this.view = webviewView;
 
-    this._view.webview.options = {
+    this.view.webview.options = {
       enableScripts: true,
       enableCommandUris: true,
     };
 
-    this._view.webview.html = await this.getHtmlForWebview(webviewView.webview);
-    this._view.onDidDispose(() => {
-      for (const disposable of this._disposables) {
+    this.view.webview.html = await this.getHtmlForWebview(webviewView.webview);
+    this.view.onDidDispose(() => {
+      for (const disposable of this.disposables) {
         disposable.dispose();
       }
     });
 
-    this._disposables.push(
-      this._view.webview.onDidReceiveMessage((data) => {
+    this.disposables.push(
+      this.view.webview.onDidReceiveMessage((data) => {
         switch (data.type) {
           case APP_READY_MESSAGE: {
-            this.postMessage(INIT_MESSAGE, this._homeState);
+            this.postMessage(INIT_MESSAGE, this.homeState);
             break;
           }
         }
       })
     );
 
-    this.postMessage(UPDATE_MESSAGE, this._homeState);
+    this.postMessage(UPDATE_MESSAGE, this.homeState);
   }
 
   private bindEvents() {
-    this._disposables.push(
-      this.git.onDidOpenRepository(this.handleRepositoryChange)
-    );
-    this._disposables.push(
-      this.git.onDidCloseRepository(this.handleRepositoryChange)
-    );
+    if (this.git) {
+      this.disposables.push(
+        this.git.onDidOpenRepository(this.handleRepositoryChange.bind(this))
+      );
+      this.disposables.push(
+        this.git.onDidCloseRepository(this.handleRepositoryChange.bind(this))
+      );
+    }
   }
 
-  private handleRepositoryChange() {
-    this._homeState = this.initializeHomeState();
-    this.postMessage(UPDATE_MESSAGE, this._homeState);
+  private async handleRepositoryChange() {
+    await this.initializeHomeState();
+    this.postMessage(UPDATE_MESSAGE, this.homeState);
   }
 
-  private initializeHomeState() {
-    return {
-      repositoryCount: this.git.repositories.length,
+  private async initializeHomeState() {
+    const repositories = this.git?.repositories || [];
+    if (!this.selectedRepository && repositories.length > 0) {
+      this.selectedRepository = repositories[0];
+    }
+
+    this.homeState = {
+      repositoryCount: repositories.length,
+      commitHistory: ((await this.selectedRepository?.log()) || []).slice(
+        0,
+        MAX_COMMITS_IN_TIMELINE
+      ),
     };
   }
 
   private postMessage(type: string, data: any) {
-    if (this._view) {
-      this._view.webview.postMessage({
+    if (this.view) {
+      this.view.webview.postMessage({
         type,
         data,
       });
     }
-  }
-
-  private get git() {
-    if (!this._git) {
-      const gitExtension =
-        vscode.extensions.getExtension<GitExtension>("vscode.git")!.exports;
-      this._git = gitExtension.getAPI(1);
-    }
-    return this._git;
   }
 
   private getRootUri() {
@@ -130,7 +140,7 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
     );
 
     const [bytes] = await Promise.all([vscode.workspace.fs.readFile(htmlUri)]);
-    const html = replaceWebviewHtmlTokens(utf8TextDecoder.decode(bytes), {
+    const html = replaceWebviewHtmlTokens(UTF8_TEXT_DECODER.decode(bytes), {
       cspSource: webview.cspSource,
       cspNonce: getNonce(),
       cssUri: cssUri.toString(),
