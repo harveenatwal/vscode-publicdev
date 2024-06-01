@@ -2,12 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <!--
-        Use a content security policy to only allow loading styles from our extension directory,
-        and only allow scripts that have a specific nonce.
-        (See the 'webview-sample' extension sample for img-src content security policy examples)
-    -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'none'; font-src #{cspSource}; style-src #{cspSource}; script-src 'nonce-#{cspNonce}';"

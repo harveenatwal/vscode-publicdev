@@ -68,7 +68,7 @@
     "watch": "concurrently npm:watch:*",
     "watch:esbuild": "concurrently -p none \"node esbuild.mjs --watch\" \"node esbuild.webviews.mjs --watch\"",
     "watch:tsc": "concurrently -p none \"tsc --noEmit --watch --project tsconfig.json\" \"tsc --noEmit --watch --project tsconfig.webviews.json\"",
-    "watch:html": "copy-and-watch --watch src/webviews/**/*.html ./dist/webviews",
+    "watch:html": "copy-and-watch --watch src/webviews/index.html ./dist/webviews/",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css --watch",
     "package": "pnpm run check-types && pnpm run lint && node esbuild.mjs --production",
     "compile-tests": "tsc -p . --outDir out",

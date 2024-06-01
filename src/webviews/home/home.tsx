@@ -1,22 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { formatDistanceToNowStrict } from "date-fns";
 import { atom, useAtom } from "jotai";
-import {
-  HomeState,
-  APP_READY_MESSAGE,
-  INIT_MESSAGE,
-  UPDATE_MESSAGE,
-} from "./shared";
+import { HomeState, INIT_MESSAGE, UPDATE_MESSAGE } from "./shared";
 import { Commit as GitCommit } from "../../git";
 import { cn } from "../utils";
 import { Button } from "../ui/components/button";
+import { useHandleReceivePostMessage } from "../lib/hooks/use-handle-post-message";
 
 const selectedTimelineCommitsAtom = atom(new Set<string>());
-
-// Get a reference to the VS Code webview api.
-// We use this API to post messages back to our extension.
-const vscode = acquireVsCodeApi();
 
 interface CommitProps {
   commit: GitCommit;
@@ -78,25 +70,20 @@ function App() {
     selectedTimelineCommitsAtom
   );
 
-  useEffect(() => {
-    // Handle messages sent from the extension to the webview
-    const listener = (event: MessageEvent<any>) => {
-      const { type, data } = event.data;
+  useHandleReceivePostMessage((event: MessageEvent<any>) => {
+    const { type, data } = event.data;
 
-      switch (type) {
-        case INIT_MESSAGE:
-        case UPDATE_MESSAGE:
-          setState(data);
-          break;
-      }
-    };
-    window.addEventListener("message", listener);
-    // App is ready. Let Webview know.
-    vscode.postMessage({ type: APP_READY_MESSAGE });
-    return () => {
-      window.removeEventListener("message", listener);
-    };
-  }, []);
+    switch (type) {
+      case INIT_MESSAGE:
+      case UPDATE_MESSAGE:
+        setState(data);
+        break;
+    }
+  });
+
+  const handleBrainstormIdeasClick = useCallback(() => {
+    setTimelineCommits(new Set());
+  }, [setTimelineCommits]);
 
   if (!state) {
     return null;
@@ -218,6 +205,7 @@ function App() {
       <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-editor-border border-t bg-editor">
         <Button
           className="w-full flex gap-2 items-center"
+          onClick={() => handleBrainstormIdeasClick()}
           disabled={!hasCommitsSelected}
         >
           <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>

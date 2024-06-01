@@ -5,6 +5,5 @@ export interface HomeState {
   commitHistory: Commit[];
 }
 
-export const APP_READY_MESSAGE = "ready";
 export const INIT_MESSAGE = "init";
 export const UPDATE_MESSAGE = "update";
