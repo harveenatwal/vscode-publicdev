@@ -26,7 +26,7 @@ const esbuildProblemMatcherPlugin = {
 async function main() {
 	const ctx = await esbuild.context({
 		entryPoints: [
-			'src/webviews/home/home.tsx'
+			'src/webviews/home/app.tsx'
 		],
 		tsconfig: 'tsconfig.webviews.json',
 		bundle: true,

@@ -1,14 +1,11 @@
-import React, { useCallback, useState } from "react";
-import ReactDOM from "react-dom/client";
+import React, { useCallback } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
-import { atom, useAtom } from "jotai";
-import { HomeState, INIT_MESSAGE, UPDATE_MESSAGE } from "./shared";
+import { useAtom } from "jotai";
 import { Commit as GitCommit } from "../../git";
 import { cn } from "../utils";
 import { Button } from "../ui/components/button";
-import { useHandleReceivePostMessage } from "../lib/hooks/use-handle-post-message";
-
-const selectedTimelineCommitsAtom = atom(new Set<string>());
+import { selectedTimelineCommitsAtom, stateAtom } from "./atoms";
+import { useNavigate } from "react-router-dom";
 
 interface CommitProps {
   commit: GitCommit;
@@ -64,32 +61,19 @@ function Commit({ commit }: CommitProps) {
   );
 }
 
-function App() {
-  const [state, setState] = useState<HomeState>();
+export function Home() {
+  const [state] = useAtom(stateAtom);
+  const navigate = useNavigate();
   const [selectedTimelineCommits, setTimelineCommits] = useAtom(
     selectedTimelineCommitsAtom
   );
 
-  useHandleReceivePostMessage((event: MessageEvent<any>) => {
-    const { type, data } = event.data;
-
-    switch (type) {
-      case INIT_MESSAGE:
-      case UPDATE_MESSAGE:
-        setState(data);
-        break;
-    }
-  });
-
   const handleBrainstormIdeasClick = useCallback(() => {
     setTimelineCommits(new Set());
+    navigate("/brainstorm");
   }, [setTimelineCommits]);
 
-  if (!state) {
-    return null;
-  }
-
-  const { repositoryCount, commitHistory } = state;
+  const { repositoryCount, commitHistory } = state!;
   const hasCommitsSelected = selectedTimelineCommits.size > 0;
 
   return (
@@ -215,8 +199,3 @@ function App() {
     </>
   );
 }
-
-(function () {
-  const root = ReactDOM.createRoot(document.getElementById("root")!);
-  root.render(<App />);
-})();
