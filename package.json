@@ -99,13 +99,18 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/vscode-webview": "^1.57.5",
     "@vscode/codicons": "^0.0.36",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "concurrently": "^8.2.2",
     "date-fns": "^3.6.0",
+    "jotai": "^2.8.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.3.0"
   }
 }

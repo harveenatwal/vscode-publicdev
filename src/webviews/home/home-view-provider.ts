@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce, replaceWebviewHtmlTokens } from "../utils";
-import { API as GitAPI, GitExtension, Repository } from "../../git";
+import { API as GitAPI, GitExtension } from "../../git";
 import {
   HomeState,
   APP_READY_MESSAGE,
@@ -15,7 +15,6 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "publicdev.homeView";
 
   private disposables: vscode.Disposable[] = [];
-  private selectedRepository: Repository | null = null;
 
   private view?: vscode.WebviewView;
   private homeState?: HomeState;
@@ -83,17 +82,26 @@ export class HomeViewProvider implements vscode.WebviewViewProvider {
 
   private async initializeHomeState() {
     const repositories = this.git?.repositories || [];
-    if (!this.selectedRepository && repositories.length > 0) {
-      this.selectedRepository = repositories[0];
-    }
 
     this.homeState = {
       repositoryCount: repositories.length,
-      commitHistory: ((await this.selectedRepository?.log()) || []).slice(
-        0,
-        MAX_COMMITS_IN_TIMELINE
-      ),
+      commitHistory: await this.getRecentCommitHistory(),
     };
+  }
+
+  private async getRecentCommitHistory() {
+    const repositories = this.git?.repositories || [];
+    const repoLogs = await Promise.all(
+      repositories.map(async (repo) => await repo.log())
+    );
+    const commitHistory = repoLogs
+      .flatMap((log) => log)
+      .sort((a, b) =>
+        a.authorDate && b.authorDate
+          ? b.authorDate.valueOf() - a.authorDate.valueOf()
+          : 0
+      );
+    return commitHistory.slice(0, MAX_COMMITS_IN_TIMELINE);
   }
 
   private postMessage(type: string, data: any) {

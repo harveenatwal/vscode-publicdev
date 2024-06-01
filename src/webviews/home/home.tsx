@@ -1,20 +1,82 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { formatDistanceToNowStrict } from "date-fns";
-
+import { atom, useAtom } from "jotai";
 import {
   HomeState,
   APP_READY_MESSAGE,
   INIT_MESSAGE,
   UPDATE_MESSAGE,
 } from "./shared";
+import { Commit as GitCommit } from "../../git";
+import { cn } from "../utils";
+import { Button } from "../ui/components/button";
+
+const selectedTimelineCommitsAtom = atom(new Set<string>());
 
 // Get a reference to the VS Code webview api.
 // We use this API to post messages back to our extension.
 const vscode = acquireVsCodeApi();
 
+interface CommitProps {
+  commit: GitCommit;
+}
+
+function Commit({ commit }: CommitProps) {
+  const [selectedTimelineCommits, setTimelineCommits] = useAtom(
+    selectedTimelineCommitsAtom
+  );
+
+  const handleCommitClick = useCallback(() => {
+    const newSelectedCommits = new Set(selectedTimelineCommits);
+    if (newSelectedCommits.has(commit.hash)) {
+      newSelectedCommits.delete(commit.hash);
+    } else {
+      newSelectedCommits.add(commit.hash);
+    }
+    setTimelineCommits(newSelectedCommits);
+  }, [commit, selectedTimelineCommits]);
+
+  const isAnyChecked = selectedTimelineCommits.size > 0;
+  const isChecked = selectedTimelineCommits.has(commit.hash);
+
+  return (
+    <div
+      className="flex gap-2 items-center justify-between text-sm flex-0 hover:bg-editor cursor-pointer px-5 py-0.5 group"
+      onClick={() => handleCommitClick()}
+    >
+      <div className="w-4 h-4 flex items-center justify-center">
+        <i
+          className={cn("codicon codicon-git-commit group-hover:hidden", {
+            "inline-flex": !isAnyChecked,
+            "!hidden": isAnyChecked,
+          })}
+        ></i>
+        <input
+          type="checkbox"
+          className={cn("group-hover:block", { hidden: !isAnyChecked })}
+          value={commit.hash}
+          checked={isChecked}
+          readOnly
+        ></input>
+      </div>
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-1">
+        {commit.message}
+      </div>
+      {commit.authorDate && (
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-0 text-muted-foreground flex-0 text-right">
+          {formatDistanceToNowStrict(commit.authorDate)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [state, setState] = useState<HomeState>();
+  const [selectedTimelineCommits, setTimelineCommits] = useAtom(
+    selectedTimelineCommitsAtom
+  );
 
   useEffect(() => {
     // Handle messages sent from the extension to the webview
@@ -41,10 +103,11 @@ function App() {
   }
 
   const { repositoryCount, commitHistory } = state;
+  const hasCommitsSelected = selectedTimelineCommits.size > 0;
 
   return (
     <>
-      <header>
+      <header className="px-5">
         <div>
           {repositoryCount === 0 && (
             <div className="mb-4 border-editor-border border-l-4 border-0 bg-editor rounded-lg p-3 pl-4">
@@ -55,7 +118,7 @@ function App() {
                   folder or cloning a repository from a URL in the Explorer.
                 </p>
                 <a
-                  className="block text-center bg-button text-button-foreground py-1 px-4 rounded"
+                  className="block text-center bg-button text-button-foreground py-1 px-5 rounded"
                   href="command:workbench.view.explorer"
                 >
                   Open a Folder or Repository
@@ -79,7 +142,15 @@ function App() {
                       Configure your OpenAI API key
                     </a>
                   </li>
-                  <li>Start drafting a tweet by clicking a commit below.</li>
+                  <li>Select one or more commits that you'd like to share.</li>
+                  <li>
+                    Click "Brainstorm Ideas" to get AI-generated suggestions for
+                    your social media posts.
+                  </li>
+                  <li>
+                    Choose the ideas you like and start drafting your perfect
+                    message!
+                  </li>
                 </ol>
               </div>
             </div>
@@ -116,9 +187,9 @@ function App() {
           </div>
         </nav>
       </header>
-      <main>
+      <main className="pb-20">
         <nav className="space-y-8">
-          <div>
+          <div className="px-5">
             <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
               Configure API Key
             </h2>
@@ -132,28 +203,27 @@ function App() {
           </div>
           {commitHistory.length > 0 && (
             <div>
-              <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
+              <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground px-5">
                 Timeline
               </h2>
               <div className="space-y-1.5">
-                {commitHistory.map((commit) => (
-                  <div className="flex gap-2 items-center justify-between text-sm flex-0">
-                    <i className="inline-flex codicon codicon-git-commit"></i>
-                    <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-1">
-                      {commit.message}
-                    </div>
-                    {commit.authorDate && (
-                      <div className="overflow-hidden text-ellipsis whitespace-nowrap flex-0 text-muted-foreground flex-0 text-right">
-                        {formatDistanceToNowStrict(commit.authorDate)}
-                      </div>
-                    )}
-                  </div>
+                {commitHistory.map((commit, i) => (
+                  <Commit key={i} commit={commit} />
                 ))}
               </div>
             </div>
           )}
         </nav>
       </main>
+      <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-editor-border border-t bg-editor">
+        <Button
+          className="w-full flex gap-2 items-center"
+          disabled={!hasCommitsSelected}
+        >
+          <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>
+          Brainstorm Ideas
+        </Button>
+      </div>
     </>
   );
 }
