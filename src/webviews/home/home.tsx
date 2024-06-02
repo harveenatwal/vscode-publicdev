@@ -4,10 +4,12 @@ import { useAtom } from "jotai";
 import { Commit as GitCommit } from "../../git";
 import { cn } from "../utils";
 import { Button } from "../ui/components/button";
-import { selectedTimelineCommitsAtom, stateAtom } from "./atoms";
-import { useNavigate } from "react-router-dom";
+import { selectedTimelineCommitsAtom, homeStateAtom } from "./atoms";
 import { vscode } from "../lib/vscode";
-import { BRAINSTORM_IDEAS_ACTION_MESSAGE } from "./shared";
+import {
+  BRAINSTORM_IDEAS_ACTION_MESSAGE,
+  COPY_BRAINSTORM_PROMPT_MESSAGE,
+} from "./shared";
 
 interface CommitProps {
   commit: GitCommit;
@@ -64,8 +66,7 @@ function Commit({ commit }: CommitProps) {
 }
 
 export function Home() {
-  const [state] = useAtom(stateAtom);
-  const navigate = useNavigate();
+  const [state] = useAtom(homeStateAtom);
   const [selectedTimelineCommits, setTimelineCommits] = useAtom(
     selectedTimelineCommitsAtom
   );
@@ -76,10 +77,20 @@ export function Home() {
       data: Array.from(selectedTimelineCommits.values()),
     });
     setTimelineCommits(new Set());
-    navigate("/brainstorm");
-  }, [setTimelineCommits]);
+  }, [setTimelineCommits, selectedTimelineCommits]);
 
-  const { repositoryCount, commitHistory } = state!;
+  const handlePromptCopyToClipboard = useCallback(() => {
+    vscode.postMessage({
+      type: COPY_BRAINSTORM_PROMPT_MESSAGE,
+      data: Array.from(selectedTimelineCommits.values()),
+    });
+  }, [selectedTimelineCommits]);
+
+  if (!state) {
+    return null;
+  }
+
+  const { repositoryCount, commitHistory } = state;
   const hasCommitsSelected = selectedTimelineCommits.size > 0;
 
   return (
@@ -164,7 +175,7 @@ export function Home() {
           </div>
         </nav>
       </header>
-      <main className="pb-20">
+      <main className="pb-32">
         <nav className="space-y-8">
           <div className="px-5">
             <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
@@ -201,7 +212,16 @@ export function Home() {
           )}
         </nav>
       </main>
-      <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-editor-border border-t bg-editor">
+      <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-editor-border border-t bg-editor space-y-2">
+        <Button
+          className="w-full flex gap-2 items-center"
+          onClick={() => handlePromptCopyToClipboard()}
+          disabled={!hasCommitsSelected}
+          variant={"outline"}
+        >
+          <i className="inline-flex codicon codicon-clippy"></i>
+          Copy Prompt
+        </Button>
         <Button
           className="w-full flex gap-2 items-center"
           onClick={() => handleBrainstormIdeasClick()}

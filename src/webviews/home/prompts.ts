@@ -10,10 +10,76 @@ export function systemMessage(): ChatCompletionMessageParam {
   };
 }
 
-const profilePromptPartial = (profile: Profile) => {
-  let content = `Given the following user profile\n`;
-  return content + `\`\`\`json\n${JSON.stringify(profile)}\n\`\`\``;
-};
+export function brainstormIdeasPromptJsonSchema(): ChatCompletionMessageParam {
+  const preferredPlatforms = getPreferredPlatforms();
+
+  const schema = {
+    type: "object",
+    properties: {
+      posts: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            commitMessage: {
+              type: "string",
+              description:
+                "The short description of the code commit to be used as a basis for the social media post.",
+            },
+            postIdeas: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: {
+                    type: "string",
+                    description: "The post idea title.",
+                  },
+                  format: {
+                    type: "string",
+                    enum: [
+                      "Short Text",
+                      "Image with Caption",
+                      "Question",
+                      "Meme",
+                      "Tech Tip",
+                      "Animated Demo",
+                    ],
+                    description: "The format of the social media post.",
+                  },
+                  platform: {
+                    type: "string",
+                    enum: preferredPlatforms,
+                    description: "The suggested platform for the post.",
+                  },
+                  content: {
+                    type: "string",
+                    description:
+                      "The text content of the post, including any suggested emojis or hashtags.",
+                  },
+                  visual: {
+                    type: "string",
+                    description:
+                      "Optional description of a visual element (image, GIF, video) to accompany the post.",
+                  },
+                },
+                required: ["title", "format", "platform", "content"],
+              },
+            },
+          },
+          required: ["commitMessage", "postIdeas"],
+        },
+      },
+    },
+  };
+
+  return {
+    role: "system",
+    content:
+      "Provide your output in json format with the following schema:\n\n" +
+      `\`\`\`json\n${JSON.stringify(schema)}\n\`\`\``,
+  };
+}
 
 export function brainstormIdeasPrompt(
   commits: Commit[]
@@ -32,7 +98,7 @@ export function brainstormIdeasPrompt(
   
   ${
     profile
-      ? "* **Tone:** Align with the user's profile (professional, witty, technical, etc.)"
+      ? "* **Tone:** Align with the user's profile"
       : "* **Tone:** Suggest various tones (professional, witty, technical, etc.)"
   }
   ${
@@ -53,3 +119,8 @@ export function brainstormIdeasPrompt(
     content: prompt,
   };
 }
+
+const profilePromptPartial = (profile: Profile) => {
+  let content = `Given the following user profile\n`;
+  return content + `\`\`\`json\n${JSON.stringify(profile)}\n\`\`\``;
+};

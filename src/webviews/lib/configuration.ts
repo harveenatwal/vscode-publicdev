@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Profile } from "./types";
 
-const config = vscode.workspace.getConfiguration("PublicDev");
+const config = vscode.workspace.getConfiguration("publicdev");
 
 export const getProfile: () => Profile | null = () => {
   const name = config.get<string>("profile.name", "");

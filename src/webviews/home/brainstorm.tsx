@@ -1,17 +1,31 @@
+import { useAtom } from "jotai";
 import React from "react";
-import { useHandleReceivePostMessage } from "../lib/hooks/use-handle-post-message";
+import { brainstormStateAtom } from "./atoms";
 
 export function Brainstorm() {
-  useHandleReceivePostMessage((event: MessageEvent<any>) => {
-    const { type, data } = event.data;
+  const [state] = useAtom(brainstormStateAtom);
 
-    switch (type) {
-    }
-  });
+  if (!state) {
+    return null;
+  }
 
   return (
     <>
-      <main>Hello world</main>
+      {state.brainstormPostIdeasResponse.posts.map((commitIdeaList) => (
+        <div>
+          <div>{commitIdeaList.commitMessage}</div>
+          <div>
+            {commitIdeaList.postIdeas.map((idea) => (
+              <div>
+                <div>{idea.title}</div>
+                <div>{idea.format}</div>
+                <div>{idea.content}</div>
+                <div>{idea.visual}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </>
   );
 }

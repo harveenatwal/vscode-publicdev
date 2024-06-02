@@ -2,14 +2,22 @@ import * as vscode from "vscode";
 import { API as GitAPI, GitExtension } from "../../git";
 import {
   BRAINSTORM_IDEAS_ACTION_MESSAGE,
+  COPY_BRAINSTORM_PROMPT_MESSAGE,
   HomeState,
   INIT_MESSAGE,
+  SHOW_BRAINSTORM_PANEL_MESSAGE,
   UPDATE_MESSAGE,
 } from "./shared";
 import { BaseViewProvider } from "../base-view-provider";
 import { APP_READY_MESSAGE } from "../lib/constants/messages";
 import { OpenAIClientManager } from "../lib/openai-client";
-import { brainstormIdeasPrompt, systemMessage } from "./prompts";
+import {
+  brainstormIdeasPrompt,
+  brainstormIdeasPromptJsonSchema,
+  systemMessage,
+} from "./prompts";
+import { z } from "zod";
+import { brainstormPostIdeasResponseSchema } from "./schema";
 
 const MAX_COMMITS_IN_TIMELINE = 15;
 const VIEW_NAME = "home";
@@ -41,6 +49,11 @@ export class HomeViewProvider extends BaseViewProvider {
       }
       case BRAINSTORM_IDEAS_ACTION_MESSAGE: {
         await this.brainstormIdeas(data.data);
+        break;
+      }
+      case COPY_BRAINSTORM_PROMPT_MESSAGE: {
+        await this.copyBrainstormPrompt(data.data);
+        break;
       }
     }
   }
@@ -49,16 +62,70 @@ export class HomeViewProvider extends BaseViewProvider {
     const openAIClientManager = OpenAIClientManager.getInstance();
     const openai = openAIClientManager.getClient();
     const recentCommits = await this.getRecentCommitHistory();
+    const selectedCommits = recentCommits.filter((commit) =>
+      commits.includes(commit.hash)
+    );
 
-    const completion = await openai.chat.completions.create({
-      messages: [
-        systemMessage(),
-        brainstormIdeasPrompt(
-          recentCommits.filter((commit) => commits.includes(commit.hash))
-        ),
-      ],
-      model: "gpt-3.5-turbo",
-    });
+    try {
+      const completion = await openai.chat.completions.create({
+        response_format: { type: "json_object" },
+        messages: [
+          systemMessage(),
+          brainstormIdeasPromptJsonSchema(),
+          brainstormIdeasPrompt(selectedCommits),
+        ],
+        model: "gpt-3.5-turbo",
+      });
+
+      const jsonContent = completion.choices[0]?.message?.content;
+      if (!jsonContent) {
+        vscode.window.showErrorMessage("OpenAI API response missing content");
+        return;
+      }
+
+      try {
+        const jsonData = JSON.parse(jsonContent);
+        const parsedData = brainstormPostIdeasResponseSchema.parse(jsonData);
+        this.postMessage(SHOW_BRAINSTORM_PANEL_MESSAGE, {
+          brainstormPostIdeasResponse: parsedData,
+        });
+      } catch (parseError) {
+        if (parseError instanceof z.ZodError) {
+          const errorMessage = `Invalid JSON schema: ${parseError.issues
+            .map((issue) => issue.message)
+            .join(", ")}`;
+          console.error(`[ERROR] ${errorMessage}`);
+        }
+        vscode.window.showErrorMessage(
+          "Error parsing JSON from OpenAI response"
+        );
+      }
+    } catch (apiError: any) {
+      if (apiError.response) {
+        const errorResponse = apiError.response.data;
+        const errorMessage = `OpenAI API error: ${errorResponse.error.message} (Type: ${errorResponse.error.type})`;
+        console.log(`[ERROR] ${errorMessage}`);
+        vscode.window.showErrorMessage(errorMessage);
+      } else {
+        vscode.window.showErrorMessage(
+          "OpenAI API error: Network or request issue"
+        );
+        console.log(
+          `[ERROR] OpenAI API error: Network or request issue: ${apiError.message}`
+        );
+      }
+    }
+  }
+
+  private async copyBrainstormPrompt(commits: string[]) {
+    const recentCommits = await this.getRecentCommitHistory();
+    const selectedCommits = recentCommits.filter((commit) =>
+      commits.includes(commit.hash)
+    );
+    const system = systemMessage().content;
+    const prompt = brainstormIdeasPrompt(selectedCommits).content as string;
+    vscode.env.clipboard.writeText(system + "\n\n" + prompt);
+    vscode.window.showInformationMessage("Copied prompt to clipboard.");
   }
 
   private bindEvents() {
