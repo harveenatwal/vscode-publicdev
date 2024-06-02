@@ -1,6 +1,9 @@
 import { window, ExtensionContext, Disposable, commands } from "vscode";
 import { HomeViewProvider } from "./webviews/home/home-view-provider";
-import { SET_OPEN_AI_API_KEY_COMMAND } from "./constants/commands";
+import {
+  OPEN_SETTINGS_COMMAND,
+  SET_OPEN_AI_API_KEY_COMMAND,
+} from "./constants/commands";
 import { OPENAI_API_KEY_SECRET_KEY } from "./constants/secrets";
 
 export function activate(context: ExtensionContext) {
@@ -35,6 +38,14 @@ export function activate(context: ExtensionContext) {
     setOpenAiApiKeyCommandHandler
   );
   disposables.push(setOpenAIApiKeyCommand);
+
+  const openSettingsCommand = commands.registerCommand(
+    OPEN_SETTINGS_COMMAND,
+    () => {
+      commands.executeCommand("workbench.action.openSettings", "PublicDev");
+    }
+  );
+  disposables.push(openSettingsCommand);
 }
 
 export function deactivate() {}

@@ -162,15 +162,24 @@ export function Home() {
         <nav className="space-y-8">
           <div className="px-5">
             <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
-              Configure API Key
+              Configure
             </h2>
-            <a
-              href="command:publicdev.setOpenAIApiKey"
-              className="flex gap-2 items-center"
-            >
-              <i className="pdicon pdicon-openai text-sm inline-flex"></i>
-              <div>OpenAI </div>
-            </a>
+            <div className="space-y-1.5">
+              <a
+                href="command:publicdev.showSettingsPage"
+                className="flex gap-2 items-center"
+              >
+                <i className="codicon codicon-gear text-sm flex w-5 h-5 items-center justify-center"></i>
+                <div>Profile Settings</div>
+              </a>
+              <a
+                href="command:publicdev.setOpenAIApiKey"
+                className="flex gap-2 items-center"
+              >
+                <i className="pdicon pdicon-openai text-sm flex w-5 h-5 items-center justify-center"></i>
+                <div>OpenAI API Key</div>
+              </a>
+            </div>
           </div>
           {commitHistory.length > 0 && (
             <div>

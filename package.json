@@ -34,12 +34,53 @@
         }
       ]
     },
+    "configuration": {
+      "title": "PublicDev",
+      "properties": {
+        "profile.name": {
+          "order": 0,
+          "type": "string",
+          "default": "",
+          "description": "Your public display name or handle."
+        },
+        "profile.bio": {
+          "order": 1,
+          "type": "string",
+          "default": "",
+          "description": "A short description about yourself or your work."
+        },
+        "profile.communicationStyle": {
+          "order": 2,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "informative",
+              "witty",
+              "technical",
+              "enthusiastic",
+              "humorous",
+              "approachable",
+              "thoughtful",
+              "professional"
+            ]
+          },
+          "default": [],
+          "description": "Choose attributes that best represent your desired communication style."
+        }
+      }
+    },
     "commands": [
       {
         "command": "publicdev.setOpenAIApiKey",
         "title": "Set OpenAI API Key",
         "category": "PublicDev"
-      }
+      },
+			{
+				"command": "publicdev.showSettingsPage",
+				"title": "Open Settings",
+				"category": "PublicDev"
+			}
     ],
     "icons": {
       "publicdev-publicdev": {
