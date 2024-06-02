@@ -1,0 +1,37 @@
+# Contributing to PublicDev
+
+First off, thank you for considering contributing to PublicDev! I appreciate your interest in making this extension even better.
+
+## How to Contribute
+
+There are many ways to contribute, including:
+
+- **Reporting Bugs:** If you find a bug, please open an issue on [GitHub](https://github.com/harveenatwal/vscode-publicdev/issues) with a clear description, steps to reproduce, and expected behavior.
+- **Suggesting Enhancements:** Have an idea for a new feature or improvement? Open an issue on [GitHub](https://github.com/harveenatwal/vscode-publicdev/issues) to share your thoughts.
+- **Improving Documentation:** Found a typo or unclear explanation? You can submit a pull request to update the documentation.
+- **Submitting Code Changes:** If you're a developer, you can contribute directly to the codebase. Please follow the guidelines below for submitting pull requests.
+
+## Submitting Pull Requests
+
+1. **Fork the repository:** Click the "Fork" button on the [GitHub](https://github.com/harveenatwal/vscode-publicdev) page to create your copy of the project.
+2. **Create a branch:** Switch to a new branch for your changes (e.g., `git checkout -b feature/my-new-feature`).
+3. **Make your changes:** Implement your feature or fix and write clear commit messages.
+4. **Push your changes:** Push your branch to your fork (e.g., `git push origin feature/my-new-feature`).
+5. **Open a pull request:** Go to the original repository and click the "New Pull Request" button. Follow the template and provide a detailed description of your changes.
+
+## Development Setup
+
+1. **Clone the repository:** `git clone https://github.com/harveenatwal/vscode-publicdev.git`
+2. **Install dependencies:** `pnpm install`
+3. **Run the extension:** Open VS Code, press `F5` to start a new Extension Development Host instance, and test your changes.
+
+## Coding Style
+
+- Follow the existing coding conventions in the project.
+- Use clear variable and function names.
+- Write concise and well-documented code.
+
+## Additional Notes
+
+- This project uses [semantic versioning](https://semver.org/) for releases.
+- Please be patient while I review your pull request. I appreciate your contribution!

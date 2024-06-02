@@ -1,71 +1,38 @@
-# vscode-publicdev README
+# PublicDev: AI-Powered Social Sharing for Developers 🚀
 
-This is the README for your extension "vscode-publicdev". After writing up a brief description, we recommend including the following sections.
+[![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/your-publisher-name.publicdev.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=your-publisher-name.publicdev)
+
+PublicDev is a VS Code extension that makes it easy to share your code commits and project updates on social media with the help of AI.
+
+Tired of staring at a blank screen, trying to come up with the perfect tweet about your latest feature? Let PublicDev handle the brainstorming and drafting for you!
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Brainstorming Power:** Generate creative social media post ideas based on your commits.
+- **AI-Powered Drafting:** Craft engaging messages that showcase your work in the best light.
+- **Multi-Platform Support:** Tailor content for Twitter, LinkedIn, Mastodon, and more.
+- **Customization:** Adjust tone, style, and hashtags to match your personal brand.
 
-For example if there is an image subfolder under your extension project workspace:
+## Getting Started
 
-\!\[feature X\]\(images/feature-x.png\)
+1. **Install:** Download and install PublicDev from the VS Code Marketplace.
+2. **Configure:** Set up your OpenAI API key in the extension settings.
+3. **Select Commits:** Choose the commits you want to share.
+4. **Brainstorm:** Click "Brainstorm Ideas" to get AI-generated suggestions.
+5. **Draft & Share:** Select your favorite ideas and start crafting your perfect posts!
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## How It Works
 
-## Requirements
+PublicDev leverages the power of OpenAI's language models to analyze your commit messages and generate relevant social media post ideas. It considers your project details and personal preferences to create tailored suggestions.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Author + Contact
 
-## Extension Settings
+Hi, my name is [Harveen](https://twitter.com/harveenatwal_) and I built this thing. I'm a soloist who likes to build things, but have a bad habit of not building in public. While working on another project, [webtilities.com](https://webtilities.com), I thought about a vscode extension, which could help me automate the marketing bits. Voilà, PublicDev was born. I appreciate you taking the time to read my blurb. If you have any questions or feedback, please reach out to us on [Twitter](https://twitter.com/harveenatwal_) or open an issue on [GitHub](https://github.com/harveenatwal/vscode-publicdev).
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Contributing
 
-For example:
+I welcome contributions! If you'd like to help me improve PublicDev, please check out our [Contribution Guidelines](CONTRIBUTING.md).
 
-This extension contributes the following settings:
+## License
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+This project is licensed under the [MIT License](LICENSE).
