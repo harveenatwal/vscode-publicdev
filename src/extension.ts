@@ -5,8 +5,9 @@ import {
   SET_OPEN_AI_API_KEY_COMMAND,
 } from "./constants/commands";
 import { OPENAI_API_KEY_SECRET_KEY } from "./constants/secrets";
+import { OpenAIClientManager } from "./webviews/lib/openai-client";
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
   // Ensure all disposables are properly subscribed and disposed of
   // when the extension unloads.
   const disposables: Disposable[] = [];
@@ -20,7 +21,11 @@ export function activate(context: ExtensionContext) {
   );
   disposables.push(homeViewProvider);
 
-  const setOpenAiApiKeyCommandHandler = async (name: string = "world") => {
+  const openAIClientManager = OpenAIClientManager.getInstance({
+    apiKey: await context.secrets.get(OPENAI_API_KEY_SECRET_KEY),
+  });
+
+  const setOpenAiApiKeyCommandHandler = async () => {
     const apiKey = await window.showInputBox({
       prompt: "Enter your OpenAI API key",
       placeHolder: "sk-...",
@@ -28,6 +33,7 @@ export function activate(context: ExtensionContext) {
 
     if (apiKey) {
       await context.secrets.store(OPENAI_API_KEY_SECRET_KEY, apiKey);
+      openAIClientManager.setClient({ apiKey });
       window.showInformationMessage(
         "Your OpenAI API key has been securely encrypted and stored."
       );

@@ -55,18 +55,36 @@
           "items": {
             "type": "string",
             "enum": [
-              "informative",
-              "witty",
-              "technical",
-              "enthusiastic",
-              "humorous",
-              "approachable",
-              "thoughtful",
-              "professional"
+              "Informative",
+              "Witty",
+              "Technical",
+              "Enthusiastic",
+              "Humorous",
+              "Approachable",
+              "Thoughtful",
+              "Professional"
             ]
           },
           "default": [],
           "description": "Choose attributes that best represent your desired communication style."
+        },
+        "platform.preferredPlatforms": {
+          "order": 0,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "X (Twitter)",
+              "LinkedIn",
+              "Mastodon",
+              "Bluesky",
+              "Facebook",
+              "Instagram",
+              "Threads"
+            ]
+          },
+          "default": [],
+          "description": "Select the social media platforms you primarily use to share your work and updates."
         }
       }
     },
@@ -76,11 +94,11 @@
         "title": "Set OpenAI API Key",
         "category": "PublicDev"
       },
-			{
-				"command": "publicdev.showSettingsPage",
-				"title": "Open Settings",
-				"category": "PublicDev"
-			}
+      {
+        "command": "publicdev.showSettingsPage",
+        "title": "Open Settings",
+        "category": "PublicDev"
+      }
     ],
     "icons": {
       "publicdev-publicdev": {
@@ -150,6 +168,7 @@
     "concurrently": "^8.2.2",
     "date-fns": "^3.6.0",
     "jotai": "^2.8.2",
+    "openai": "^4.47.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",

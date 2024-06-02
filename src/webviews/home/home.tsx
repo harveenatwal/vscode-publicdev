@@ -6,6 +6,8 @@ import { cn } from "../utils";
 import { Button } from "../ui/components/button";
 import { selectedTimelineCommitsAtom, stateAtom } from "./atoms";
 import { useNavigate } from "react-router-dom";
+import { vscode } from "../lib/vscode";
+import { BRAINSTORM_IDEAS_ACTION_MESSAGE } from "./shared";
 
 interface CommitProps {
   commit: GitCommit;
@@ -69,6 +71,10 @@ export function Home() {
   );
 
   const handleBrainstormIdeasClick = useCallback(() => {
+    vscode.postMessage({
+      type: BRAINSTORM_IDEAS_ACTION_MESSAGE,
+      data: Array.from(selectedTimelineCommits.values()),
+    });
     setTimelineCommits(new Set());
     navigate("/brainstorm");
   }, [setTimelineCommits]);

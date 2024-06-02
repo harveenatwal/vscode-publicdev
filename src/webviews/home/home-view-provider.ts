@@ -1,8 +1,15 @@
 import * as vscode from "vscode";
 import { API as GitAPI, GitExtension } from "../../git";
-import { HomeState, INIT_MESSAGE, UPDATE_MESSAGE } from "./shared";
+import {
+  BRAINSTORM_IDEAS_ACTION_MESSAGE,
+  HomeState,
+  INIT_MESSAGE,
+  UPDATE_MESSAGE,
+} from "./shared";
 import { BaseViewProvider } from "../base-view-provider";
 import { APP_READY_MESSAGE } from "../lib/constants/messages";
+import { OpenAIClientManager } from "../lib/openai-client";
+import { brainstormIdeasPrompt, systemMessage } from "./prompts";
 
 const MAX_COMMITS_IN_TIMELINE = 15;
 const VIEW_NAME = "home";
@@ -26,13 +33,32 @@ export class HomeViewProvider extends BaseViewProvider {
     this.bindEvents();
   }
 
-  protected handleReceivePostMessage(data: any) {
+  protected async handleReceivePostMessage(data: any) {
     switch (data.type) {
       case APP_READY_MESSAGE: {
         this.postMessage(INIT_MESSAGE, this.homeState);
         break;
       }
+      case BRAINSTORM_IDEAS_ACTION_MESSAGE: {
+        await this.brainstormIdeas(data.data);
+      }
     }
+  }
+
+  private async brainstormIdeas(commits: string[]) {
+    const openAIClientManager = OpenAIClientManager.getInstance();
+    const openai = openAIClientManager.getClient();
+    const recentCommits = await this.getRecentCommitHistory();
+
+    const completion = await openai.chat.completions.create({
+      messages: [
+        systemMessage(),
+        brainstormIdeasPrompt(
+          recentCommits.filter((commit) => commits.includes(commit.hash))
+        ),
+      ],
+      model: "gpt-3.5-turbo",
+    });
   }
 
   private bindEvents() {

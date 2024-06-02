@@ -12,7 +12,7 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
     private readonly viewName: string
   ) {}
 
-  protected abstract handleReceivePostMessage(data: any): void;
+  protected abstract handleReceivePostMessage(data: any): Promise<void>;
 
   public async resolveWebviewView(
     webviewView: vscode.WebviewView,
