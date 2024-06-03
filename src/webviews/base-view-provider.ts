@@ -40,7 +40,7 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
     );
   }
 
-  protected postMessage(type: string, data: any) {
+  protected postMessage(type: string, data?: any) {
     if (this.view) {
       this.view.webview.postMessage({
         type,

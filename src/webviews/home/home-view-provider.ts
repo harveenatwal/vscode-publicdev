@@ -3,6 +3,7 @@ import { API as GitAPI, GitExtension } from "../../git";
 import {
   BRAINSTORM_IDEAS_ACTION_MESSAGE,
   COPY_BRAINSTORM_PROMPT_MESSAGE,
+  FINISHED_BRAINSTORMING_MESSAGE,
   HomeState,
   INIT_MESSAGE,
   SHOW_BRAINSTORM_PANEL_MESSAGE,
@@ -76,6 +77,7 @@ export class HomeViewProvider extends BaseViewProvider {
         ],
         model: "gpt-3.5-turbo",
       });
+      this.postMessage(FINISHED_BRAINSTORMING_MESSAGE);
 
       const jsonContent = completion.choices[0]?.message?.content;
       if (!jsonContent) {
@@ -101,6 +103,7 @@ export class HomeViewProvider extends BaseViewProvider {
         );
       }
     } catch (apiError: any) {
+      this.postMessage(FINISHED_BRAINSTORMING_MESSAGE);
       if (apiError.response) {
         const errorResponse = apiError.response.data;
         const errorMessage = `OpenAI API error: ${errorResponse.error.message} (Type: ${errorResponse.error.type})`;

@@ -1,10 +1,14 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useAtom } from "jotai";
 import { Commit as GitCommit } from "../../git";
 import { cn } from "../utils";
 import { Button } from "../ui/components/button";
-import { selectedTimelineCommitsAtom, homeStateAtom } from "./atoms";
+import {
+  selectedTimelineCommitsAtom,
+  homeStateAtom,
+  isBrainstormingIdeasAtom,
+} from "./atoms";
 import { vscode } from "../lib/vscode";
 import {
   BRAINSTORM_IDEAS_ACTION_MESSAGE,
@@ -66,12 +70,16 @@ function Commit({ commit }: CommitProps) {
 }
 
 export function Home() {
+  const [isBrainstormingIdeas, setIsBrainstormingIdeas] = useAtom(
+    isBrainstormingIdeasAtom
+  );
   const [state] = useAtom(homeStateAtom);
   const [selectedTimelineCommits, setTimelineCommits] = useAtom(
     selectedTimelineCommitsAtom
   );
 
   const handleBrainstormIdeasClick = useCallback(() => {
+    setIsBrainstormingIdeas(true);
     vscode.postMessage({
       type: BRAINSTORM_IDEAS_ACTION_MESSAGE,
       data: Array.from(selectedTimelineCommits.values()),
@@ -225,10 +233,21 @@ export function Home() {
         <Button
           className="w-full flex gap-2 items-center"
           onClick={() => handleBrainstormIdeasClick()}
-          disabled={!hasCommitsSelected}
+          disabled={!hasCommitsSelected || isBrainstormingIdeas}
         >
-          <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>
-          Brainstorm Ideas
+          {!isBrainstormingIdeas && (
+            <>
+              <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>
+              Brainstorm Ideas
+            </>
+          )}
+
+          {isBrainstormingIdeas && (
+            <>
+              <i className="inline-flex codicon codicon-loading animate-spin"></i>
+              Brainstorming...
+            </>
+          )}
         </Button>
       </div>
     </>

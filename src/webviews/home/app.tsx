@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { MemoryRouter, useNavigate, useRoutes } from "react-router-dom";
 import { Home } from "./home";
 import {
+  FINISHED_BRAINSTORMING_MESSAGE,
   INIT_MESSAGE,
   SHOW_BRAINSTORM_PANEL_MESSAGE,
   UPDATE_MESSAGE,
@@ -10,11 +11,18 @@ import {
 import { useHandleReceivePostMessage } from "../lib/hooks/use-handle-post-message";
 import { Brainstorm } from "./brainstorm";
 import { useAtom } from "jotai";
-import { brainstormStateAtom, homeStateAtom } from "./atoms";
+import {
+  brainstormStateAtom,
+  homeStateAtom,
+  isBrainstormingIdeasAtom,
+} from "./atoms";
 
 function App() {
   const [homeState, setHomeState] = useAtom(homeStateAtom);
   const [brainstormState, setBrainstormState] = useAtom(brainstormStateAtom);
+  const [isBrainstormingIdeas, setIsBrainstormingIdeas] = useAtom(
+    isBrainstormingIdeasAtom
+  );
   const navigate = useNavigate();
   const routes = useRoutes([
     {
@@ -38,6 +46,9 @@ function App() {
       case SHOW_BRAINSTORM_PANEL_MESSAGE:
         setBrainstormState(data);
         navigate("/brainstorm");
+        break;
+      case FINISHED_BRAINSTORMING_MESSAGE:
+        setIsBrainstormingIdeas(false);
         break;
     }
   });

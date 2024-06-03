@@ -11,8 +11,8 @@ export function Brainstorm() {
 
   return (
     <>
-      {state.brainstormPostIdeasResponse.posts.map((commitIdeaList) => (
-        <div>
+      {state.brainstormPostIdeasResponse.posts.map((commitIdeaList, i) => (
+        <div key={i}>
           <div>{commitIdeaList.commitMessage}</div>
           <div>
             {commitIdeaList.postIdeas.map((idea) => (
