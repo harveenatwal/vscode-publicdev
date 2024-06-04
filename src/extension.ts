@@ -15,15 +15,15 @@ export async function activate(context: ExtensionContext) {
     new Disposable(() => Disposable.from(...disposables).dispose())
   );
 
+  const openAIClientManager = OpenAIClientManager.getInstance({
+    apiKey: await context.secrets.get(OPENAI_API_KEY_SECRET_KEY),
+  });
+
   const homeViewProvider = window.registerWebviewViewProvider(
     HomeViewProvider.viewType,
     new HomeViewProvider(context)
   );
   disposables.push(homeViewProvider);
-
-  const openAIClientManager = OpenAIClientManager.getInstance({
-    apiKey: await context.secrets.get(OPENAI_API_KEY_SECRET_KEY),
-  });
 
   const setOpenAiApiKeyCommandHandler = async () => {
     const apiKey = await window.showInputBox({
@@ -31,13 +31,11 @@ export async function activate(context: ExtensionContext) {
       placeHolder: "sk-...",
     });
 
-    if (apiKey) {
-      await context.secrets.store(OPENAI_API_KEY_SECRET_KEY, apiKey);
-      openAIClientManager.setClient({ apiKey });
-      window.showInformationMessage(
-        "Your OpenAI API key has been securely encrypted and stored."
-      );
-    }
+    await context.secrets.store(OPENAI_API_KEY_SECRET_KEY, apiKey || "");
+    openAIClientManager.setClient({ apiKey });
+    window.showInformationMessage(
+      "Your OpenAI API key has been securely encrypted and stored."
+    );
   };
   const setOpenAIApiKeyCommand = commands.registerCommand(
     SET_OPEN_AI_API_KEY_COMMAND,

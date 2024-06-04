@@ -27,7 +27,7 @@
   },
   "icon": "images/publicdev-icon.png",
   "galleryBanner": {
-    "color": "#2F7CDE",
+    "color": "#232323",
     "theme": "dark"
   },
   "categories": [
@@ -161,7 +161,7 @@
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
     "build": "pnpm run check-types && pnpm run lint && pnpm run build:html && pnpm run build:icons && pnpm run build:css && pnpm run build:ts-prod",
-    "build:icons": "pnpm icons:svgo && pnpm fantasticon",
+    "build:icons": "pnpm icons:svgo && pnpm fantasticon && copy-and-watch node_modules/@vscode/codicons/dist/* ./dist/codicons",
     "build:ts": "node esbuild.webviews.mjs && node esbuild.mjs",
     "build:ts-prod": "node esbuild.webviews.mjs --production && node esbuild.mjs --production",
     "build:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css",
@@ -169,8 +169,12 @@
     "icons:svgo": "svgo -q -f ./images/icons/ --config svgo.config.js",
     "prepackage": "pnpm run build",
     "package": "pnpm vsce package --no-dependencies",
-    "prepublish": "pnpm run build",
-    "publish": "pnpm vsce publish --no-dependencies"
+    "prepublish:major": "pnpm run build",
+    "publish:major": "pnpm vsce publish major --no-dependencies",
+    "prepublish:minor": "pnpm run build",
+    "publish:minor": "pnpm vsce publish minor --no-dependencies",
+    "prepublish:patch": "pnpm run build",
+    "publish:patch": "pnpm vsce publish path --no-dependencies"
   },
   "devDependencies": {
     "@twbs/fantasticon": "^3.0.0",

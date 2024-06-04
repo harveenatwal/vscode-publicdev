@@ -99,7 +99,7 @@ export function Home() {
     return null;
   }
 
-  const { repositoryCount, commitHistory } = state;
+  const { repositoryCount, commitHistory, hasAnApiKey } = state;
   const hasCommitsSelected = selectedTimelineCommits.size > 0;
 
   return (
@@ -206,7 +206,9 @@ export function Home() {
           <Button
             className="w-full flex gap-2 items-center"
             onClick={() => handleBrainstormIdeasClick()}
-            disabled={!hasCommitsSelected || isBrainstormingIdeas}
+            disabled={
+              !hasCommitsSelected || isBrainstormingIdeas || !hasAnApiKey
+            }
           >
             {!isBrainstormingIdeas && (
               <>

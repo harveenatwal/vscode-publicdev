@@ -4,6 +4,7 @@ import { BrainstormPostIdeasResponse } from "./schema";
 export interface HomeState {
   repositoryCount: number;
   commitHistory: Commit[];
+  hasAnApiKey: boolean;
 }
 
 export interface BrainstormState {

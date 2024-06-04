@@ -8,7 +8,7 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
   protected disposables: vscode.Disposable[] = [];
 
   constructor(
-    private readonly extensionContext: vscode.ExtensionContext,
+    protected readonly extensionContext: vscode.ExtensionContext,
     private readonly viewName: string
   ) {}
 
@@ -66,10 +66,6 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
     return vscode.Uri.joinPath(this.getDistUri(), "webviews");
   }
 
-  private getNodeModulesUri() {
-    return vscode.Uri.joinPath(this.getRootUri(), "node_modules");
-  }
-
   private getViewIndexUri() {
     return vscode.Uri.joinPath(this.getWebviewsUri(), `index.html`);
   }
@@ -90,10 +86,7 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
   }
   private getCodiconsUri(webview: vscode.Webview) {
     return webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.getNodeModulesUri(),
-        "@vscode/codicons/dist/codicon.css"
-      )
+      vscode.Uri.joinPath(this.getDistUri(), "codicons/codicon.css")
     );
   }
   private getPdiconsUri(webview: vscode.Webview) {

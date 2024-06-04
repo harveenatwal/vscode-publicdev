@@ -2,10 +2,10 @@ import OpenAI, { ClientOptions } from "openai";
 
 export class OpenAIClientManager {
   private static instance: OpenAIClientManager | null = null;
-  private openAi: OpenAI;
+  private openAi: OpenAI | null;
 
   private constructor(options: ClientOptions) {
-    this.openAi = new OpenAI(options);
+    this.openAi = options.apiKey ? new OpenAI(options) : null;
   } // Private constructor to prevent direct instantiation
 
   static getInstance(options?: ClientOptions): OpenAIClientManager {
@@ -20,10 +20,10 @@ export class OpenAIClientManager {
   }
 
   setClient(options: ClientOptions): void {
-    this.openAi = new OpenAI(options);
+    this.openAi = options.apiKey ? new OpenAI(options) : null;
   }
 
-  getClient(): OpenAI {
+  getClient(): OpenAI | null {
     return this.openAi;
   }
 }

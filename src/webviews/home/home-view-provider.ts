@@ -20,6 +20,7 @@ import {
 } from "./prompts";
 import { z } from "zod";
 import { brainstormPostIdeasResponseSchema } from "./schema";
+import { OPENAI_API_KEY_SECRET_KEY } from "../../constants/secrets";
 
 const MAX_COMMITS_IN_TIMELINE = 15;
 const VIEW_NAME = "home";
@@ -68,6 +69,10 @@ export class HomeViewProvider extends BaseViewProvider {
   private async brainstormIdeas(commits: string[]) {
     const openAIClientManager = OpenAIClientManager.getInstance();
     const openai = openAIClientManager.getClient();
+    if (!openai) {
+      return;
+    }
+
     const recentCommits = await this.getRecentCommitHistory();
     const selectedCommits = recentCommits.filter((commit) =>
       commits.includes(commit.hash)
@@ -146,9 +151,20 @@ export class HomeViewProvider extends BaseViewProvider {
         this.git.onDidCloseRepository(this.handleRepositoryChange.bind(this))
       );
     }
+    this.disposables.push(
+      this.extensionContext.secrets.onDidChange(async (e) => {
+        if (e.key === OPENAI_API_KEY_SECRET_KEY) {
+          await this.updateHomeState();
+        }
+      })
+    );
   }
 
   private async handleRepositoryChange() {
+    await this.updateHomeState();
+  }
+
+  private async updateHomeState() {
     await this.initializeHomeState();
     this.postMessage(UPDATE_MESSAGE, this.homeState);
   }
@@ -159,6 +175,7 @@ export class HomeViewProvider extends BaseViewProvider {
     this.homeState = {
       repositoryCount: repositories.length,
       commitHistory: await this.getRecentCommitHistory(),
+      hasAnApiKey: OpenAIClientManager.getInstance().getClient() !== null,
     };
   }
 
