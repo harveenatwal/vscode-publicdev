@@ -192,35 +192,42 @@ export function Home() {
           )}
         </nav>
       </main>
-      <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-editor-border border-t bg-editor space-y-2">
-        <Button
-          className="w-full flex gap-2 items-center"
-          onClick={() => handlePromptCopyToClipboard()}
-          disabled={!hasCommitsSelected}
-          variant={"outline"}
-        >
-          <i className="inline-flex codicon codicon-clippy"></i>
-          Copy Prompt
-        </Button>
-        <Button
-          className="w-full flex gap-2 items-center"
-          onClick={() => handleBrainstormIdeasClick()}
-          disabled={!hasCommitsSelected || isBrainstormingIdeas}
-        >
-          {!isBrainstormingIdeas && (
-            <>
-              <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>
-              Brainstorm Ideas
-            </>
-          )}
+      <div className="fixed bottom-0 left-0 right-0 p-4 w-full border-t border-editor-border bg-editor">
+        <div className="space-y-2">
+          <Button
+            className="w-full flex gap-2 items-center"
+            onClick={() => handlePromptCopyToClipboard()}
+            disabled={!hasCommitsSelected}
+            variant={"outline"}
+          >
+            <i className="inline-flex codicon codicon-clippy"></i>
+            Copy Prompt
+          </Button>
+          <Button
+            className="w-full flex gap-2 items-center"
+            onClick={() => handleBrainstormIdeasClick()}
+            disabled={!hasCommitsSelected || isBrainstormingIdeas}
+          >
+            {!isBrainstormingIdeas && (
+              <>
+                <i className="inline-flex codicon codicon-lightbulb-sparkle"></i>
+                Brainstorm Ideas
+              </>
+            )}
 
-          {isBrainstormingIdeas && (
-            <>
-              <i className="inline-flex codicon codicon-loading animate-spin"></i>
-              Brainstorming...
-            </>
-          )}
-        </Button>
+            {isBrainstormingIdeas && (
+              <>
+                <i className="inline-flex codicon codicon-loading animate-spin"></i>
+                Brainstorming...
+              </>
+            )}
+          </Button>
+        </div>
+        <div className="text-xs flex items-center justify-center gap-1 text-muted-foreground mt-3">
+          Made with{" "}
+          <i className="inline-flex codicon codicon-heart-filled text-red-600 !text-xs"></i>{" "}
+          by <a href="https://x.com/harveenatwal_">Harveen Atwal</a>
+        </div>
       </div>
     </>
   );
