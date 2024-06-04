@@ -1,6 +1,6 @@
 # PublicDev: AI-Powered Social Sharing for Developers 🚀
 
-[![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/your-publisher-name.publicdev.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=your-publisher-name.publicdev)
+[![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/HarveenAtwal.vscode-publicdev.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=HarveenAtwal.vscode-publicdev)
 
 PublicDev is a VS Code extension that makes it easy to share your code commits and project updates on social media with the help of AI.
 
@@ -27,7 +27,7 @@ PublicDev leverages the power of OpenAI's language models to analyze your commit
 
 ## Author + Contact
 
-Hi, my name is [Harveen](https://twitter.com/harveenatwal_) and I built this thing. I'm a soloist who likes to build things, but have a bad habit of not building in public. While working on another project, [webtilities.com](https://webtilities.com), I thought about a vscode extension, which could help me automate the marketing bits. Voilà, PublicDev was born. I appreciate you taking the time to read my blurb. If you have any questions or feedback, please reach out to us on [Twitter](https://twitter.com/harveenatwal_) or open an issue on [GitHub](https://github.com/harveenatwal/vscode-publicdev).
+Hi, my name is [Harveen](https://twitter.com/harveenatwal_) and I built this thing. I'm a soloist who likes to build things, but have a bad habit of not building in public. While working on another project, [webtilities.com](https://webtilities.com), I thought about a vscode extension, which could help me automate the marketing bits. Voilà, PublicDev was born. I appreciate you taking the time to read my blurb. If you have any questions or feedback, please reach out to me on [Twitter](https://twitter.com/harveenatwal_) or open an issue on [GitHub](https://github.com/harveenatwal/vscode-publicdev).
 
 ## Contributing
 

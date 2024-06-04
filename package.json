@@ -1,14 +1,41 @@
 {
+  "version": "1.0.0",
   "name": "vscode-publicdev",
   "displayName": "PublicDev",
-  "description": "",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.89.0"
+  "description": "PublicDev is your VS Code buddy for sharing your coding wins on social media. It's like having a creative assistant who brainstorms cool post ideas and even helps you draft catchy messages about your latest commits and projects. No more staring at a blank screen - just code, share, and connect with your fellow devs!",
+  "publisher": "HarveenAtwal",
+  "author": {
+    "name": "Harveen Atwal"
+  },
+  "keywords": [
+    "AI",
+    "Social Media",
+    "Code Commits",
+    "Sharing",
+    "Productivity"
+  ],
+  "homepage": "https://github.com/harveenatwal/vscode-publicdev/blob/master/README.md",
+  "pricing": "Free",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/harveenatwal/vscode-publicdev/issues",
+    "email": "itsharveenatwal@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harveenatwal/vscode-publicdev.git"
+  },
+  "icon": "images/publicdev-icon.png",
+  "galleryBanner": {
+    "color": "#2F7CDE",
+    "theme": "dark"
   },
   "categories": [
     "Other"
   ],
+  "engines": {
+    "vscode": "^1.89.0"
+  },
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
@@ -121,23 +148,29 @@
     "vscode.git"
   ],
   "scripts": {
-    "vscode:prepublish": "pnpm run package",
-    "compile": "pnpm run check-types && pnpm run lint && node esbuild.mjs",
     "pre-watch": "pnpm build:icons",
     "watch": "concurrently npm:watch:*",
     "watch:esbuild": "concurrently -p none \"node esbuild.mjs --watch\" \"node esbuild.webviews.mjs --watch\"",
     "watch:tsc": "concurrently -p none \"tsc --noEmit --watch --project tsconfig.json\" \"tsc --noEmit --watch --project tsconfig.webviews.json\"",
     "watch:html": "copy-and-watch --watch src/webviews/index.html ./dist/webviews/",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css --watch",
-    "package": "pnpm run check-types && pnpm run lint && node esbuild.mjs --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
+    "build": "pnpm run check-types && pnpm run lint && pnpm run build:html && pnpm run build:icons && pnpm run build:css && pnpm run build:ts-prod",
     "build:icons": "pnpm icons:svgo && pnpm fantasticon",
-    "icons:svgo": "svgo -q -f ./images/icons/ --config svgo.config.js"
+    "build:ts": "node esbuild.webviews.mjs && node esbuild.mjs",
+    "build:ts-prod": "node esbuild.webviews.mjs --production && node esbuild.mjs --production",
+    "build:css": "npx tailwindcss -i ./src/main.css -o ./dist/main.css",
+    "build:html": "copy-and-watch src/webviews/index.html ./dist/webviews/",
+    "icons:svgo": "svgo -q -f ./images/icons/ --config svgo.config.js",
+    "prepackage": "pnpm run build",
+    "package": "pnpm vsce package --no-dependencies",
+    "prepublish": "pnpm run build",
+    "publish": "pnpm vsce publish --no-dependencies"
   },
   "devDependencies": {
     "@twbs/fantasticon": "^3.0.0",
