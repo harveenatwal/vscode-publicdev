@@ -155,7 +155,7 @@ export function Home() {
         </div>
         <ExtensionHeaderLinks />
       </header>
-      <main className="pb-32">
+      <main className="pb-40">
         <nav className="space-y-8">
           <div className="px-5">
             <h2 className="mb-2 tracking-widest uppercase text-xs text-muted-foreground">
