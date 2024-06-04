@@ -174,7 +174,7 @@
     "prepublish:minor": "pnpm run build",
     "publish:minor": "pnpm vsce publish minor --no-dependencies",
     "prepublish:patch": "pnpm run build",
-    "publish:patch": "pnpm vsce publish path --no-dependencies"
+    "publish:patch": "pnpm vsce publish patch --no-dependencies"
   },
   "devDependencies": {
     "@twbs/fantasticon": "^3.0.0",
