@@ -1,7 +1,7 @@
 import z from "zod";
 
 const postIdeaSchema = z.object({
-  title: z.string(),
+  ideaType: z.string(),
   format: z.string(),
   platform: z.string(),
   content: z.string(),
@@ -16,6 +16,8 @@ export const brainstormPostIdeasResponseSchema = z.object({
     })
   ),
 });
+
+export type PostIdea = z.infer<typeof postIdeaSchema>;
 
 export type BrainstormPostIdeasResponse = z.infer<
   typeof brainstormPostIdeasResponseSchema

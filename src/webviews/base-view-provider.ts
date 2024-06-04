@@ -49,6 +49,11 @@ export abstract class BaseViewProvider implements vscode.WebviewViewProvider {
     }
   }
 
+  protected copyToClipboard(message: string) {
+    vscode.env.clipboard.writeText(message);
+    vscode.window.showInformationMessage("Copied prompt to clipboard.");
+  }
+
   private getRootUri() {
     return this.extensionContext.extensionUri;
   }

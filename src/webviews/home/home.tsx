@@ -14,6 +14,7 @@ import {
   BRAINSTORM_IDEAS_ACTION_MESSAGE,
   COPY_BRAINSTORM_PROMPT_MESSAGE,
 } from "./shared";
+import { ExtensionHeaderLinks } from "./components/extension-header-links";
 
 interface CommitProps {
   commit: GitCommit;
@@ -152,36 +153,7 @@ export function Home() {
             </div>
           )}
         </div>
-        <nav className="flex justify-between mb-4">
-          <div className="flex gap-1 items-center -ml-2">
-            <div className="group relative">
-              <a href="https://x.com/PublicDevTeam">
-                <i className="hover:bg-editor p-2 rounded inline-flex codicon codicon-twitter text-sm"></i>
-              </a>
-              <span className="group-hover:opacity-100 pointer-events-none absolute top-10 -left-1 w-max opacity-0 transition-opacity border shadow p-1 bg-tooltip text-tooltip-foreground rounded border-tooltip-border">
-                @PublicDevTeam
-              </span>
-            </div>
-            <div className="group relative">
-              <a href="https://github.com/harveenatwal/vscode-publicdev/issues">
-                <i className="hover:bg-editor p-2 rounded inline-flex codicon codicon-feedback text-sm"></i>
-              </a>
-              <span className="group-hover:opacity-100 pointer-events-none absolute top-10 -left-4 w-max opacity-0 transition-opacity border shadow p-1 px-2 bg-tooltip text-tooltip-foreground rounded border-tooltip-border">
-                Issues
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-1 items-center -mr-2">
-            <div className="group relative">
-              <a href="https://github.com/harveenatwal/vscode-publicdev/">
-                <i className="hover:bg-editor p-2 rounded inline-flex codicon codicon-github text-sm"></i>
-              </a>
-              <span className="group-hover:opacity-100 pointer-events-none absolute top-10 -left-16 w-max opacity-0 transition-opacity border shadow p-1 px-2 bg-tooltip text-tooltip-foreground rounded border-tooltip-border">
-                Github Repo
-              </span>
-            </div>
-          </div>
-        </nav>
+        <ExtensionHeaderLinks />
       </header>
       <main className="pb-32">
         <nav className="space-y-8">
@@ -195,7 +167,7 @@ export function Home() {
                 className="flex gap-2 items-center"
               >
                 <i className="codicon codicon-gear text-sm flex w-5 h-5 items-center justify-center"></i>
-                <div>Profile Settings</div>
+                <div>Settings</div>
               </a>
               <a
                 href="command:publicdev.setOpenAIApiKey"

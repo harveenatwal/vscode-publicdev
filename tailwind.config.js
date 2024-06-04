@@ -34,6 +34,10 @@ module.exports = {
           DEFAULT: 'var(--button)',
           foreground: 'var(--button-foreground)'
         },
+        "button-secondary": {
+          DEFAULT: 'var(--button-secondary)',
+          foreground: 'var(--button-secondary-foreground)'
+        },
         tooltip: {
           DEFAULT: 'var(--tooltip)',
           foreground: 'var(--tooltip-foreground)'

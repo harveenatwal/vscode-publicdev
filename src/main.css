@@ -4,7 +4,7 @@
 
 @layer base {
     :root {
-      --muted: var(--vscode-foreground);
+      --muted: var(--vscode-back);
       --muted-foreground: var(--vscode-descriptionForeground);
       
       --editor: var(--vscode-editor-background);
@@ -23,6 +23,9 @@
       
       --button: var(--vscode-button-background);
       --button-foreground: var(--vscode-button-foreground);
+
+      --button-secondary: var(--vscode-button-secondaryBackground);
+      --button-secondary-foreground: var(--vscode-button-secondaryForeground);
 
       --side-bar-background: var(--vscode-sideBar-background);
       --side-bar-title-background: var(--vscode-sideBarTitle-background);

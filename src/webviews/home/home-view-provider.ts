@@ -3,6 +3,7 @@ import { API as GitAPI, GitExtension } from "../../git";
 import {
   BRAINSTORM_IDEAS_ACTION_MESSAGE,
   COPY_BRAINSTORM_PROMPT_MESSAGE,
+  COPY_TO_CLIPBOARD_MESSAGE,
   FINISHED_BRAINSTORMING_MESSAGE,
   HomeState,
   INIT_MESSAGE,
@@ -42,18 +43,23 @@ export class HomeViewProvider extends BaseViewProvider {
     this.bindEvents();
   }
 
-  protected async handleReceivePostMessage(data: any) {
-    switch (data.type) {
+  protected async handleReceivePostMessage(message: any) {
+    const { type, data } = message;
+    switch (type) {
       case APP_READY_MESSAGE: {
         this.postMessage(INIT_MESSAGE, this.homeState);
         break;
       }
       case BRAINSTORM_IDEAS_ACTION_MESSAGE: {
-        await this.brainstormIdeas(data.data);
+        await this.brainstormIdeas(data);
         break;
       }
       case COPY_BRAINSTORM_PROMPT_MESSAGE: {
-        await this.copyBrainstormPrompt(data.data);
+        await this.copyBrainstormPrompt(data);
+        break;
+      }
+      case COPY_TO_CLIPBOARD_MESSAGE: {
+        this.copyToClipboard(data);
         break;
       }
     }
@@ -127,8 +133,8 @@ export class HomeViewProvider extends BaseViewProvider {
     );
     const system = systemMessage().content;
     const prompt = brainstormIdeasPrompt(selectedCommits).content as string;
-    vscode.env.clipboard.writeText(system + "\n\n" + prompt);
-    vscode.window.showInformationMessage("Copied prompt to clipboard.");
+
+    this.copyToClipboard(system + "\n\n" + prompt);
   }
 
   private bindEvents() {

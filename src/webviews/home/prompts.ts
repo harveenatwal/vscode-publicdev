@@ -31,9 +31,10 @@ export function brainstormIdeasPromptJsonSchema(): ChatCompletionMessageParam {
               items: {
                 type: "object",
                 properties: {
-                  title: {
+                  ideaType: {
                     type: "string",
-                    description: "The post idea title.",
+                    description:
+                      "A concise phrase (3-8 words) summarizing the post's main theme and hinting at the format/style. Avoid emojis.",
                   },
                   format: {
                     type: "string",
