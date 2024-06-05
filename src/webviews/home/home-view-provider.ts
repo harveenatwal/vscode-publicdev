@@ -145,10 +145,16 @@ export class HomeViewProvider extends BaseViewProvider {
   private bindEvents() {
     if (this.git) {
       this.disposables.push(
-        this.git.onDidOpenRepository(this.handleRepositoryChange.bind(this))
+        this.git.onDidOpenRepository(this.handleGitChange.bind(this))
       );
       this.disposables.push(
-        this.git.onDidCloseRepository(this.handleRepositoryChange.bind(this))
+        this.git.onDidCloseRepository(this.handleGitChange.bind(this))
+      );
+      this.disposables.push(
+        this.git.onDidChangeState(this.handleGitChange.bind(this))
+      );
+      this.disposables.push(
+        this.git.onDidPublish(this.handleGitChange.bind(this))
       );
     }
     this.disposables.push(
@@ -160,7 +166,7 @@ export class HomeViewProvider extends BaseViewProvider {
     );
   }
 
-  private async handleRepositoryChange() {
+  private async handleGitChange() {
     await this.updateHomeState();
   }
 
