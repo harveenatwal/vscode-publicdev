@@ -156,6 +156,13 @@ export class HomeViewProvider extends BaseViewProvider {
       this.disposables.push(
         this.git.onDidPublish(this.handleGitChange.bind(this))
       );
+      // Listen for each repository change
+      const repositories = this.git.repositories || [];
+      for (const repository of repositories) {
+        this.disposables.push(
+          repository.state.onDidChange(this.handleGitChange.bind(this))
+        );
+      }
     }
     this.disposables.push(
       this.extensionContext.secrets.onDidChange(async (e) => {
