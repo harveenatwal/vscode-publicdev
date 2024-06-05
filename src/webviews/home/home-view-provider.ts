@@ -163,6 +163,8 @@ export class HomeViewProvider extends BaseViewProvider {
           repository.state.onDidChange(this.handleGitChange.bind(this))
         );
       }
+    } else {
+      vscode.window.showErrorMessage("Unable to listen to git events.");
     }
     this.disposables.push(
       this.extensionContext.secrets.onDidChange(async (e) => {
