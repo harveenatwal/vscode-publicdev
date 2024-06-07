@@ -2,6 +2,8 @@
 
 [![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/HarveenAtwal.vscode-publicdev.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=HarveenAtwal.vscode-publicdev)
 
+![Example Screenshot](./images/publicdev-example-screenshot.png)
+
 PublicDev is a VS Code extension that makes it easy to share your code commits and project updates on social media with the help of AI.
 
 Tired of staring at a blank screen, trying to come up with the perfect tweet about your latest feature? Let PublicDev handle the brainstorming and drafting for you!
